@@ -1,0 +1,25 @@
+@{
+  Layout = "_Layout";
+}
+
+@model RecipeBox.Models.Category
+
+<h4>Edit a category</h4>
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.CategoryId)
+    @* @Html.HiddenFor(model => model.StartDate) *@
+
+    @Html.LabelFor(model => model.CategoryName)
+    @Html.EditorFor(model => model.CategoryName)
+
+    @* @Html.DisplayNameFor(model => model.StartDate) 
+    @Html.EditorFor(model => model.StartDate) *@
+    
+    @* @Html.LabelFor(model => model.StartDate)
+    @Html.EditorFor(model => model.StartDate) *@
+  
+
+    <input type="submit" value="Edit" />
+}
+<p>@Html.ActionLink("Show all categories", "Index")</p>
