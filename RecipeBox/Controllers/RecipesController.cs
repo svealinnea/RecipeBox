@@ -4,19 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Security.Claims;
+
 
 namespace RecipeBox.Controllers
 {
-  // [Authorize]
+  [Authorize]
   public class RecipesController : Controller
   {
     private readonly RecipeBoxContext _db;
-    // private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public RecipesController(RecipeBoxContext db)
+    public RecipesController(UserManager<ApplicationUser> userManager, RecipeBoxContext db)
     {
-      // _userManager = userManager;
+      _userManager = userManager;
       _db = db;
     }
 
@@ -32,10 +36,11 @@ namespace RecipeBox.Controllers
     }
 
     [HttpPost]
-    public ActionResult Create(Recipe recipe, int CategoryId)
+    public async Task<ActionResult> Create(Recipe recipe, int CategoryId)
     {
-      Console.WriteLine("hello");
-      Console.WriteLine(recipe.RecipeRating);
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      recipe.User = currentUser;
       _db.Recipes.Add(recipe);
       if (CategoryId != 0)
       {
