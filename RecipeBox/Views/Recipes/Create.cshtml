@@ -11,7 +11,24 @@
     @Html.LabelFor(model => model.RecipeName)
     @Html.TextBoxFor(model => model.RecipeName)
 
-    @Html.Label("Select Category")
+    <br>
+
+    @Html.LabelFor(model => model.RecipeIngredients)
+    @Html.TextAreaFor(model => model.RecipeIngredients)
+
+    <br>
+
+    @Html.LabelFor(model => model.RecipeInstructions)
+    @Html.TextAreaFor( model => model.RecipeInstructions)
+
+    <br>
+        
+    @Html.Label("Select a rating")
+    @Html.DropDownList("Rating")
+
+    <br> 
+
+    @Html.Label("Select category")
     @Html.DropDownList("CategoryId") 
 
     <input type="submit" value="Add new Recipe" class="btn btn-default" />
