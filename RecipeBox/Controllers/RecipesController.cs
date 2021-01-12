@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 
 namespace RecipeBox.Controllers
 {
@@ -33,6 +34,8 @@ namespace RecipeBox.Controllers
     [HttpPost]
     public ActionResult Create(Recipe recipe, int CategoryId)
     {
+      Console.WriteLine("hello");
+      Console.WriteLine(recipe.RecipeRating);
       _db.Recipes.Add(recipe);
       if (CategoryId != 0)
       {
@@ -54,10 +57,10 @@ namespace RecipeBox.Controllers
     public ActionResult Edit(int id)
     {
       var thisRecipe = _db.Recipes.FirstOrDefault(recipe => recipe.RecipeId == id);
-      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "CategoryName"); 
+      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "CategoryName");
       return View(thisRecipe);
     }
-    
+
     [HttpPost]
     public ActionResult Edit(Recipe recipe, int CategoryId)
     {
@@ -65,7 +68,7 @@ namespace RecipeBox.Controllers
       {
         _db.CategoryRecipe.Add(new CategoryRecipe() { CategoryId = CategoryId, RecipeId = recipe.RecipeId });
       }
-      _db.Entry(recipe).State=EntityState.Modified;
+      _db.Entry(recipe).State = EntityState.Modified;
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
@@ -76,16 +79,16 @@ namespace RecipeBox.Controllers
       ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "CategoryName");
       return View(thisRecipe);
     }
-    
+
     [HttpPost]
     public ActionResult AddCategory(Recipe recipe, int CategoryId)
     {
-      if(CategoryId != 0)
+      if (CategoryId != 0)
       {
-        _db.CategoryRecipe.Add(new CategoryRecipe() { CategoryId = CategoryId, RecipeId = recipe.RecipeId});
+        _db.CategoryRecipe.Add(new CategoryRecipe() { CategoryId = CategoryId, RecipeId = recipe.RecipeId });
       }
-        _db.SaveChanges();
-        return RedirectToAction("Index");
+      _db.SaveChanges();
+      return RedirectToAction("Index");
     }
 
     public ActionResult Delete(int id)
@@ -102,7 +105,7 @@ namespace RecipeBox.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
-  
+
     [HttpPost]
     public ActionResult DeleteCategory(int joinId)
     {
