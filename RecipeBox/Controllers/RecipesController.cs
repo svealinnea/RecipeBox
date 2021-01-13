@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using System;
+
 
 
 namespace RecipeBox.Controllers
@@ -24,10 +26,27 @@ namespace RecipeBox.Controllers
       _db = db;
     }
 
-    public ActionResult Index()
+    // public async Task<ActionResult> Index()
+    public async Task<ActionResult> Index()
     {
-      return View(_db.Recipes.ToList());
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var userRecipes = _db.Recipes.Where(entry => entry.User.Id == currentUser.Id).ToList();
+      // ViewBag.RecipeRatings  = _db.RecipeRating.ToList();
+      // ViewBag.RecipeNames =  _db.RecipeName.ToList();
+      return View(userRecipes);
+      // ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "rating_desc" : "";
+      // var recipes = from s in _db.Recipes
+      // select s;
+      //   switch (sortOrder)
+      //   {
+      //     case "rating_desc":
+      //       recipes = recipes.OrderBy(s => s.RecipeRating);
+      //       break;
+      //   }
+      //   return View(recipes.ToList());
     }
+
 
     public ActionResult Create()
     {
@@ -38,6 +57,8 @@ namespace RecipeBox.Controllers
     [HttpPost]
     public async Task<ActionResult> Create(Recipe recipe, int CategoryId)
     {
+      Console.WriteLine("Hello");
+      Console.WriteLine(recipe.RecipeRating);
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
       recipe.User = currentUser;
@@ -58,6 +79,7 @@ namespace RecipeBox.Controllers
           .FirstOrDefault(recipe => recipe.RecipeId == id);
       return View(thisRecipe);
     }
+
 
     public ActionResult Edit(int id)
     {

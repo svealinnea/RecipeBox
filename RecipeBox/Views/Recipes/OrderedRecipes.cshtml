@@ -1,0 +1,14 @@
+@{
+    Layout ="_Layout";
+}
+
+@using RecipeBox.Models;
+@model RecipeBox.Models.Recipe;
+
+<h1>Recipes in order of rating: </h1>
+<hr>
+
+<ol>
+    <li>@Html.DisplayFor(model => model.RecipeRating)</li>
+</ol>
+

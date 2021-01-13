@@ -6,7 +6,10 @@
 
 <h2>Recipe Details</h2>
 <hr />
-<h3>@Html.DisplayNameFor(model => model.RecipeName)</h3>
+<h3>@Html.DisplayNameFor(model => model.RecipeName): @Html.DisplayFor(model => model.RecipeName)</h3>
+<p>@Html.DisplayNameFor(model => model.RecipeInstructions): @Html.DisplayFor(model => model.RecipeInstructions)</p>
+<p>@Html.DisplayNameFor(model => model.RecipeIngredients): @Html.DisplayFor(model => model.RecipeIngredients)</p>
+<p>@Html.DisplayNameFor(model => model.RecipeRating): @Html.DisplayFor(model => model.RecipeRating)</p>
 
 @if(Model.JoinEntries.Count == 0)
 {
@@ -15,12 +18,6 @@
 else
 {
   <h4>Categories the Recipe belongs to:</h4>
-  @* <ul>
-    @foreach(var join in Model.Categories)
-    {
-      <li>@join.Category.CategoryName</li>
-    }
-  </ul> *@
 }
 
   <ul>
