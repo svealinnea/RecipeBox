@@ -26,25 +26,52 @@ namespace RecipeBox.Controllers
       _db = db;
     }
 
-    // public async Task<ActionResult> Index()
-    public async Task<ActionResult> Index()
+    // public async Task<ActionResult> Index(string sortOrder, string searchString)
+    public ViewResult Index(string sortOrder, string searchString)
     {
-      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync(userId);
-      var userRecipes = _db.Recipes.Where(entry => entry.User.Id == currentUser.Id).ToList();
-      // ViewBag.RecipeRatings  = _db.RecipeRating.ToList();
-      // ViewBag.RecipeNames =  _db.RecipeName.ToList();
-      return View(userRecipes);
-      // ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "rating_desc" : "";
-      // var recipes = from s in _db.Recipes
-      // select s;
-      //   switch (sortOrder)
-      //   {
-      //     case "rating_desc":
-      //       recipes = recipes.OrderBy(s => s.RecipeRating);
-      //       break;
-      //   }
-      //   return View(recipes.ToList());
+      // var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      // var currentUser = await _userManager.FindByIdAsync(userId);
+      // var userRecipes = _db.Recipes.Where(entry => entry.User.Id == currentUser.Id).ToList();
+      // return View(userRecipes);
+    ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "recipe_desc" : "";
+    ViewBag.RatingSortParm = sortOrder == "Rating" ? "rating_desc" : "Rating";
+    var recipes = from s in _db.Recipes
+    select s;
+    if (!String.IsNullOrEmpty(searchString))
+    {
+        recipes = recipes.Where(s => s.RecipeIngredients.Contains(searchString)
+        || s.RecipeIngredients.Contains(searchString));
+    }
+    switch (sortOrder)
+    {
+        case "ingt_desc":
+            recipes = recipes.OrderByDescending(s => s.RecipeIngredients);
+            break;
+        case "rate_desc":
+            recipes = recipes.OrderBy(s => s.RecipeRating);
+            break;
+        case "name_desc":
+            recipes = recipes.OrderByDescending(s => s.RecipeName);
+            break;
+        default:
+            recipes = recipes.OrderBy(s => s.RecipeIngredients);
+            break;
+        }
+        return View(recipes.ToList());
+    
+    }
+
+
+
+
+    [HttpPost]
+    public async Task<ActionResult> Search(string search)
+      {
+        var thisUserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var thisCurrentUser = await _userManager.FindByIdAsync(thisUserId);
+        var userRecipes = _db.Recipes.Where(entry => entry.User.Id == thisCurrentUser.Id);
+        var searchedUserRecipes = userRecipes.Where(recipe => (recipe.RecipeIngredients.Contains(search))).ToList();
+        return View(searchedUserRecipes);
     }
 
 

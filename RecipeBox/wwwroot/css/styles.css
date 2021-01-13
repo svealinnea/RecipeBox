@@ -21,5 +21,7 @@ h4 {
 body {
   background-image: url("https://media.istockphoto.com/photos/culinary-background-with-spices-and-recipe-book-picture-id607299402?k=6&m=607299402&s=612x612&w=0&h=eLARAbW9C2YYRCm2FXxn1yyfTVoKuKyhOvhKv0EEZl8=");
   background-color: rgb(134, 206, 248);
+  background-repeat: "no-repeat";
+  background-size: "cover";
  }
 
